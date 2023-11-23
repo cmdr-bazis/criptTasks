@@ -64,31 +64,45 @@ class RSAkeygen {
     public fun checkPRS(){
         print("PSQ String: ")
         println(this.getPRS())
+
         var currentSize = 2
-
-
         var nGramList = ArrayList<Couple>()
-
         var numZero = 0
         var numOne = 0
+        var compareFlag = true
+        var tempNGram = ""
+        var tempNGramNumber = 0
+
         for (i in 0..<this.PRSFinalOut.length){
             if (this.PRSFinalOut[i] == '0'){ numZero += 1 }
             else if (this.PRSFinalOut[i] == '1'){ numOne += 1 }
         }
 
-        for (i in 3..1023){
+        for (i in 4..1023){
             nGramList.add(Couple(convert.convert(10, i.toLong(), 2), 0))
         }
 
         for (i in 0..<nGramList.size){
-            print(nGramList[i]._stringValue)
-            print(" ")
+            for (j in 0..<this.PRSFinalOut.length - 9){
+                compareFlag = true
+                for (k in 0..<nGramList[i]._stringValue.length){
+                    if (nGramList[i]._stringValue[k] != this.PRSFinalOut[j + k]){
+                        compareFlag = false
+                        break
+                    }
+                }
+                if (compareFlag){
+                    nGramList[i]._intValue += 1
+                }
+            }
         }
 
-        for (i in 0..<this.PRSFinalOut.length){
-            for (j in 0..<nGramList.size){
-                if ()
-            }
+        println()
+
+        for (i in 0..<nGramList.size){
+            tempNGram = nGramList[i]._stringValue
+            tempNGramNumber = nGramList[i]._intValue
+            println("$tempNGram: $tempNGramNumber")
         }
 
         println("Number of 0's: $numZero")
