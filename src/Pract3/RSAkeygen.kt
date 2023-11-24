@@ -9,8 +9,23 @@ class RSAkeygen {
     private var numE = 7
     private var convert = BinaryConvert()
     private var PRSFinalOut: String = ""
+    private var firstNumber = 10
+    private var range = 1500
 
-    public fun createNextNumber(firstNumber: Int, range: Int){
+    constructor(numP: Int, numQ: Int, numE: Int, firstNumber: Int, range: Int){
+        this.numP = numP
+        this.numQ = numQ
+        this.numE = numE
+        this.firstNumber = firstNumber
+        this.range = range
+    }
+
+    constructor(firstNumber: Int, range: Int){
+        this.firstNumber = firstNumber
+        this.range = range
+    }
+
+    public fun createNextNumber(){
         var index = 0
         var nextNumber: Long = firstNumber.toLong()
         var stringOut = ""

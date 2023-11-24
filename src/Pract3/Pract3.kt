@@ -1,20 +1,19 @@
 package Pract3
 
 fun main(args: Array<String>) {
-//    var convert1 = BinaryConvert()
-//    var num1 = 347369432
-//    var base1 = 10
-//    var base2 = 2
+//    val keygen = RSAkeygen(273, 623, 7, 10, 3000)
 //
-//    print(convert1.convert(base1, num1, base2))
+//    keygen.createNextNumber()
+//    keygen.checkPRS()
 
-    var keygen = RSAkeygen()
-//    for (i in 1..30){
-//        print("$i: ")
-//        keygen.createNextNumber(i, 10, 1500)
-//        keygen.checkPRS()
-//        println()
-//    }
-    keygen.createNextNumber(10, 2000)
-    keygen.checkPRS()
+    var encoder = Encoder()
+    encoder.inputMessage("/home/bazis/IdeaProjects/message.txt")
+    encoder.initializeParameters(273, 623, 7, 10)
+    encoder.convertToBinary()
+    encoder.encode()
+    encoder.printEncodedMessage()
+
+    var encoder2 = Encoder()
+    encoder2.encoderInterface()
+    println(encoder2.getEncodedMessage())
 }
