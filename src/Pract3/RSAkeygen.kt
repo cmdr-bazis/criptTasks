@@ -10,28 +10,6 @@ class RSAkeygen {
     private var convert = BinaryConvert()
     private var PRSFinalOut: String = ""
 
-    private fun findGCD(numA: Int, numB: Int): Int {
-        var _numA: Int
-        var _numB: Int
-        var remaider: Int
-
-        if (numA > numB){
-            _numA = numA
-            _numB = numB
-        }
-        else{
-            _numB = numA
-            _numA = numB
-        }
-
-        remaider = _numA % _numB
-        while (remaider != 0){
-            remaider = _numA % remaider
-            _numA = remaider
-        }
-        return remaider
-    }
-
     public fun createNextNumber(firstNumber: Int, range: Int){
         var index = 0
         var nextNumber: Long = firstNumber.toLong()
@@ -65,13 +43,14 @@ class RSAkeygen {
         print("PSQ String: ")
         println(this.getPRS())
 
-        var currentSize = 2
         var nGramList = ArrayList<Couple>()
+        var nGramListOut = ArrayList<Int>()
         var numZero = 0
         var numOne = 0
         var compareFlag = true
         var tempNGram = ""
         var tempNGramNumber = 0
+        var currentSize = 3
 
         for (i in 0..<this.PRSFinalOut.length){
             if (this.PRSFinalOut[i] == '0'){ numZero += 1 }
@@ -100,9 +79,22 @@ class RSAkeygen {
         println()
 
         for (i in 0..<nGramList.size){
-            tempNGram = nGramList[i]._stringValue
-            tempNGramNumber = nGramList[i]._intValue
-            println("$tempNGram: $tempNGramNumber")
+            if (currentSize == nGramList[i]._stringValue.length){
+                nGramListOut.add(nGramList[i]._intValue)
+            }
+            else{
+                print("$currentSize: ")
+                for (j in 0..<nGramListOut.size){
+                    print(nGramListOut[j])
+                    print(", ")
+                }
+                nGramListOut.clear()
+                currentSize += 1
+                println()
+            }
+//            tempNGram = nGramList[i]._stringValue
+//            tempNGramNumber = nGramList[i]._intValue
+//            println("$tempNGram: $tempNGramNumber")
         }
 
         println("Number of 0's: $numZero")
