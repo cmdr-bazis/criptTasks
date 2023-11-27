@@ -6,14 +6,15 @@ fun main(args: Array<String>) {
 //    keygen.createNextNumber()
 //    keygen.checkPRS()
 
-    var encoder = Encoder()
-    encoder.inputMessage("/home/bazis/IdeaProjects/message.txt")
-    encoder.initializeParameters(273, 623, 7, 10)
-    encoder.convertToBinary()
-    encoder.encode()
-    encoder.printEncodedMessage()
+//    var encoder2 = Encoder() // /home/bazis/IdeaProjects/message.txt
+//    encoder2.menu()
+//    encoder2.printDictionary()
+//    println(encoder2.getConvertedMessage())
+//    println(encoder2.getGamma())
+//    println(encoder2.getEncodedMessage())
 
-    var encoder2 = Encoder()
-    encoder2.encoderInterface()
-    println(encoder2.getEncodedMessage())
+
+    var decoder2 = Decoder() // /home/bazis/IdeaProjects/messageToDecrypt.txt
+    decoder2.menu()
+    println(decoder2.getEncodedMessage())
 }
