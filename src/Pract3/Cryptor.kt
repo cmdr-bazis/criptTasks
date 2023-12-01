@@ -6,13 +6,29 @@ import java.nio.file.Paths
 abstract class Cryptor {
     protected abstract var PRS: RSAkeygen
     protected abstract var messageInitial: ArrayList<Char> //Original message
-    protected var alphabet: Array<Char> = arrayOf(' ', 'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я')
+    protected var alphabetRussian: Array<Char> = arrayOf(' ', 'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я')
+    protected var alphabetEnglish: Array<Char> = arrayOf(' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z')
+    protected lateinit var alphabet: Array<Char>
     protected abstract var lettersDictionary: ArrayList<CoupleString>
     protected abstract var convert: BinaryConvert
     protected abstract var messageConverted: String //Message converted to binary state
-    protected abstract var messageCrypted: String //Return message
-    protected abstract var letterBinarySize: Int
+    protected abstract var messageCrypted: String //Final message
+    protected abstract var letterBinarySize: Int //Max size of binary value of letter in alphabet, used for dictionary filling
 
+    protected fun findLetter(index: Int): Char {
+        var substringLetter = messageCrypted.substring(index..<index + letterBinarySize)
+        var finalLetter = ' '
+        for (i in 0..<lettersDictionary.size){
+            if (substringLetter == lettersDictionary[i]._binaryValue){
+                finalLetter = lettersDictionary[i]._letterChar
+                return finalLetter
+            }
+            else{
+                finalLetter = ' '
+            }
+        }
+        return finalLetter
+    }
 
     protected fun fillLeft(string: String, number: Int): String {
         var stringOut = ""
@@ -32,17 +48,26 @@ abstract class Cryptor {
     }
 
     protected fun setLetterBinarySize(){
-        this.letterBinarySize = convert.convert(10, alphabet.size.toLong(), 2).length - 1
+        for (i in alphabet.indices){
+            letterBinarySize = convert.convert(10, i.toLong(), 2).length
+        }
     }
 
-    protected fun initializeParameters(numP: Int, numQ: Int, numE: Int, firstNumber: Int){
+    protected fun initializeParameters(numP: Int, numQ: Int, numE: Int, firstNumber: Int, language: String){
         var binaryValueOut = ""
         var binaryValueTemp = ""
+        var languageString: String = ""
+
+        when (language){ //Defining of what language will be used for message
+            "RU" -> this.alphabet = this.alphabetRussian
+            "EN" -> this.alphabet = this.alphabetEnglish
+        }
+
         this.setLetterBinarySize()
         PRS = RSAkeygen(numP, numQ, numE, firstNumber, this.messageInitial.size * letterBinarySize)
         PRS.createNextNumber()
 
-        for (i in 0..<alphabet.size){
+        for (i in alphabet.indices){
             binaryValueTemp = convert.convert(10, i.toLong(), 2)
             binaryValueOut = this.fillLeft(binaryValueTemp, letterBinarySize)
             lettersDictionary.add(CoupleString(alphabet[i], binaryValueOut))
@@ -85,15 +110,15 @@ abstract class Cryptor {
 
         println("Введите ключ (четыре числа через пробел): ")
         key = readln()
-        for (i in 0..<4){ keyList.add(key.split(" ")[i]) }
+        for (i in 0..<5){ keyList.add(key.split(" ")[i]) }
 
         this.inputMessage(stringPath)
-        this.initializeParameters(keyList[0].toInt(), keyList[1].toInt(), keyList[2].toInt(), keyList[3].toInt())
+        this.initializeParameters(keyList[0].toInt(), keyList[1].toInt(), keyList[2].toInt(), keyList[3].toInt(), keyList[4])
         this.convert()
         this.cryption()
     }
 
-    public open fun getEncodedMessage(): String {
+    public open fun getFinalMessage(): String {
         return this.messageCrypted
     }
 

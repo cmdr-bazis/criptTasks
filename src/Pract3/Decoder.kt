@@ -10,21 +10,6 @@ class Decoder : Cryptor() {
     override var letterBinarySize: Int = 0
 
 
-    private fun findLetter(index: Int): Char {
-        var substringLetter = messageCrypted.substring(index..<index + letterBinarySize)
-        var finalLetter = ' '
-        for (i in 0..<lettersDictionary.size){
-            if (substringLetter == lettersDictionary[i]._binaryValue){
-                finalLetter = lettersDictionary[i]._letterChar
-                return finalLetter
-            }
-            else{
-                finalLetter = ' '
-            }
-        }
-        return finalLetter
-    }
-
     override fun cryption() {
         for (i in messageInitial.indices){
             if (((messageInitial[i] == '1') and (PRS.getPRS()[i] == '0')) or ((messageInitial[i] == '0') and (PRS.getPRS()[i] == '1'))){
@@ -54,15 +39,15 @@ class Decoder : Cryptor() {
 
         println("Введите ключ (четыре числа через пробел): ")
         key = readln()
-        for (i in 0..<4){ keyList.add(key.split(" ")[i]) }
+        for (i in 0..<5){ keyList.add(key.split(" ")[i]) }
 
         this.inputMessage(stringPath)
-        this.initializeParameters(keyList[0].toInt(), keyList[1].toInt(), keyList[2].toInt(), keyList[3].toInt())
+        this.initializeParameters(keyList[0].toInt(), keyList[1].toInt(), keyList[2].toInt(), keyList[3].toInt(), keyList[4])
         this.cryption()
         this.convert()
     }
 
-    override fun getEncodedMessage(): String {
+    override fun getFinalMessage(): String {
         return this.messageConverted
     }
 
